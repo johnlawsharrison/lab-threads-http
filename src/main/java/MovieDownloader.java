@@ -13,11 +13,13 @@ import java.util.Scanner;
  * Code adapted from Google.
  *
  * YOUR TASK: Add comments explaining how this code works!
- * 
+ *
  * @author Joel Ross & Kyungmin Lee
  */
 public class MovieDownloader {
 
+	// searches and downloads the results for the user inputted search query
+	// from the omdbapi database.
 	public static String[] downloadMovieData(String movie) {
 
 		//construct the url for the omdbapi API
@@ -37,10 +39,12 @@ public class MovieDownloader {
 
 			URL url = new URL(urlString);
 
+			// establishes a http connection to the constructed url
 			urlConnection = (HttpURLConnection) url.openConnection();
 			urlConnection.setRequestMethod("GET");
 			urlConnection.connect();
 
+			// the data obtained from the particular url
 			InputStream inputStream = urlConnection.getInputStream();
 			StringBuffer buffer = new StringBuffer();
 			if (inputStream == null) {
@@ -48,6 +52,7 @@ public class MovieDownloader {
 			}
 			reader = new BufferedReader(new InputStreamReader(inputStream));
 
+			// constructs and formats the String which displays the results
 			String line = reader.readLine();
 			while (line != null) {
 				buffer.append(line + "\n");
@@ -63,10 +68,12 @@ public class MovieDownloader {
 			results = results.replace("},", "},\n");
 
 			movies = results.split("\n");
-		} 
+		}
 		catch (IOException e) {
 			return null;
-		} 
+		}
+		// closes the http connection and the reader. i.e. resets
+		// to the default such that the next search query can be produced.
 		finally {
 			if (urlConnection != null) {
 				urlConnection.disconnect();
@@ -74,23 +81,23 @@ public class MovieDownloader {
 			if (reader != null) {
 				try {
 					reader.close();
-				} 
+				}
 				catch (IOException e) {
 				}
 			}
 		}
-
+		// returns the constructed String with the results 
 		return movies;
 	}
 
 
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		Scanner sc = new Scanner(System.in);
 
 		boolean searching = true;
 
-		while(searching) {					
+		while(searching) {
 			System.out.print("Enter a movie name to search for or type 'q' to quit: ");
 			String searchTerm = sc.nextLine().trim();
 			if(searchTerm.toLowerCase().equals("q")){
